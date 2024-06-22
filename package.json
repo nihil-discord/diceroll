@@ -1,0 +1,35 @@
+{
+  "name": "diceroll",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nihil-discord/diceroll.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nihil-discord/diceroll/issues"
+  },
+  "homepage": "https://github.com/nihil-discord/diceroll#readme",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "NIHILncunia",
+  "license": "MIT",
+  "dependencies": {
+    "@nihilapp/dice": "^0.0.14",
+    "commandkit": "^0.1.10",
+    "discord.js": "^14.14.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.7",
+    "dotenv": "^16.3.2",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-html": "^7.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "nodemon": "^3.0.3"
+  }
+}
