@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, } = require('discord.js');
-const { rollAllDices, } = require('@nihilncunia/diceroll');
+const { Dice, } = require('@nihilapp/dice');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,14 +16,22 @@ module.exports = {
       ? interaction.options.get('주사위식').value
       : null;
 
-    const result = rollAllDices(dice);
+    const result = Dice.rollToFormula({
+      formula: dice,
+    });
 
     const embed = new EmbedBuilder()
       .setColor('Red')
-      .setFields(...result.map((item) => ({
-        name: item.formula,
-        value: `- 전체 결과: **[ ${item.diceTotal} ]**\n**상세 결과:**\n${item.diceDetails.map((item2) => `- ${item2.dice} **[ ${item2.total} ]** (${item2.details.join('')})\n`)}- 보정: [${item.modDetails.join(',')}]`,
-      })))
+      .setFields(...result.map((item) => {
+        const rollMap = item.dices.map((item2) => `${item2.formula} **[ ${item2.total} ]**\n  - 선택됨 (${item2.result.join(',')})\n  - 제외됨 (${item2.ignore.join(',')})`);
+
+        const modMap = item.mod.length > 0 ? `- 보정: [${item.mod.join(',')}]` : '';
+
+        return {
+          name: item.formula,
+          value: `- 전체 결과: **[ ${item.total} ]**\n- 상세 결과: ${rollMap}\n${modMap}`,
+        };
+      }))
 
     interaction.reply({
       embeds: [ embed, ],

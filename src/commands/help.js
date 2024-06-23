@@ -30,6 +30,18 @@ module.exports = {
         name: 'nDn nDn',
         value: '주사위식 사이에 공백을 넣으면 역시 따로 굴리겠다는 것을 의미합니다. 총합으로 계산하지 않습니다.',
         inline: true,
+      }, {
+        name: 'nDnkhn',
+        value: 'nDn만큼의 주사위를 굴리고 kh 다음의 n개 만큼 가장 높은 순으로 주사위를 선택합니다.',
+        inline: true,
+      }, {
+        name: 'nDnkln',
+        value: 'nDn만큼의 주사위를 굴리고 kl 다음의 n개 만큼 가장 낮은 순으로 주사위를 선택합니다.',
+        inline: true,
+      }, {
+        name: '주사위식은 조합이 가능합니다.',
+        value: '위의 사례들을 조합해 원하는 주사위를 굴리세요. 단, 다른 주사위식들과 *n은 함께 사용될 수 없으니 nDn nDn 처럼 공백으로 나눠서 사용해주세요.',
+        inline: true,
       }, ]);
 
     interaction.reply({

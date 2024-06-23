@@ -18,7 +18,7 @@
   "author": "NIHILncunia",
   "license": "MIT",
   "dependencies": {
-    "@nihilapp/dice": "^0.0.14",
+    "@nihilapp/dice": "^0.0.16",
     "commandkit": "^0.1.10",
     "discord.js": "^14.14.1",
     "uuid": "^9.0.1"

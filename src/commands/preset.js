@@ -26,11 +26,14 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor('Red')
-      .setFields(...result.map((item) => ({
-        name: item.formula,
-        value: `${item}`,
-        // value: `- 전체 결과: **[ ${item.diceTotal} ]**\n**상세 결과:**\n${item.diceDetails.map((item2) => `- ${item2.dice} **[ ${item2.total} ]** (${item2.details.join('')})\n`)}- 보정: [${item.modDetails.join(',')}]`,
-      })))
+      .setFields(...result.map((item) => {
+        const rollMap = item.dices.map((item2) => `${item2.formula} **[ ${item2.total} ]** (${item2.result.join(',')})\n`);
+
+        return {
+          name: item.formula,
+          value: `- 전체 결과: **[ ${item.total} ]**\n- 상세 결과: ${rollMap}`,
+        }
+      }))
 
     interaction.reply({
       embeds: [ embed, ],
