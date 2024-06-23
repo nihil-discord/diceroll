@@ -1,9 +1,7 @@
 const { CommandKit, } = require('commandkit');
 const { Client, IntentsBitField, } = require('discord.js');
 const path = require('path');
-const env = require('dotenv');
-
-env.config();
+const env = require('dotenv').config();
 
 const client = new Client({
   intents: [
