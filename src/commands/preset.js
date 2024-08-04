@@ -1,5 +1,11 @@
 const { SlashCommandBuilder, EmbedBuilder, } = require('discord.js');
-const { Dice, } = require('@nihilapp/dice');
+const { Dice, RollResult, } = require('@nihilapp/dice');
+
+const preset = Dice.preset()
+  .map((item) => ({
+    name: item,
+    value: item,
+  }));
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,30 +16,35 @@ module.exports = {
         .setName('주사위식')
         .setDescription('주사위식을 선택하세요.')
         .setRequired(true)
-        .setChoices(...Dice.preset().map((item) => ({
-          name: item,
-          value: item,
-        })))
+        .setChoices(...preset)
     )),
   run: ({ interaction, client, handler, }) => {
+    /** @type {string | null} */
     const dice = interaction.options.get('주사위식')
       ? interaction.options.get('주사위식').value
       : null;
 
+    /** @type {RollResult} */
     const result = Dice.rollToFormula({
-      formula: dice,
-    });
+      formula: /** @type {string} */ dice,
+    }).at(0);
+
+    const total = `전체 결과: **[ ${result.total} ]**\n\n`;
+
+    const dices = result.dices.at(0);
+    const detailString = dices.result
+      .map((item) => item.dice)
+      .join(',');
+
+    const details = `상세 결과:\n\t- ${result.formula} **[ ${result.total} ]**(${detailString})`;
 
     const embed = new EmbedBuilder()
       .setColor('Red')
-      .setFields(...result.map((item) => {
-        const rollMap = item.dices.map((item2) => `${item2.formula} **[ ${item2.total} ]** (${item2.result.join(',')})\n`);
-
-        return {
-          name: item.formula,
-          value: `- 전체 결과: **[ ${item.total} ]**\n- 상세 결과: ${rollMap}`,
-        }
-      }))
+      .setFields([ {
+        name: result.formula,
+        value: `${total}`
+          + `${details}`,
+      }, ])
 
     interaction.reply({
       embeds: [ embed, ],

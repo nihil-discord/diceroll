@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, } = require('discord.js');
-const { Dice, } = require('@nihilapp/dice');
+const { Dice, RollError, RollResult, } = require('@nihilapp/dice');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,30 +12,85 @@ module.exports = {
         .setRequired(true)
     )),
   run: ({ interaction, client, handler, }) => {
+    /** @type {string | null} */
     const dice = interaction.options.get('주사위식')
       ? interaction.options.get('주사위식').value
       : null;
 
     const result = Dice.rollToFormula({
-      formula: dice,
+      formula: /** @type {string} */ dice,
     });
 
-    const embed = new EmbedBuilder()
-      .setColor('Red')
-      .setFields(...result.map((item) => {
-        const rollMap = item.dices.map((item2) => `${item2.formula} **[ ${item2.total} ]**\n  - 선택됨 (${item2.result.join(',')})\n  - 제외됨 (${item2.ignore.join(',')})`);
+    console.log(JSON.stringify(result));
 
-        const modMap = item.mod.length > 0 ? `- 보정: [${item.mod.join(',')}]` : '';
+    function dices() {
+      /** @type {RollResult[]} */
+      const copyResult = [ ...result, ];
+      return copyResult.map((diceResult) => {
+        const { formula, } = diceResult;
+        console.log(formula);
+
+        const total = `전체 결과: **[ ${diceResult.total} ]**\n\n`;
+        console.log(total);
+
+        const details = diceResult.dices.map((res, index) => {
+          const { formula, } = res;
+          const detailString = res.result.map(
+            (resItem) => resItem.dice
+          ).join(',');
+
+          const ignoreString = res.ignore.length !== 0
+            ? res.ignore.map((igRes) => igRes.dice).join(',')
+            : '';
+          const ignore = ignoreString
+            ? `\n\t- 제외됨 (${ignoreString})`
+            : '';
+
+          return `- ${formula} **[ ${res.total} ]**(${detailString})${ignore}\n`;
+        });
+        console.log(details);
+
+        const modString = diceResult.mod.length !== 0
+          ? diceResult.mod.join(', ')
+          : '';
+        const mod = modString
+          ? `- 보정치 (${modString})`
+          : '';
+        console.log(mod);
+
+        console.log(`${total}상세 결과:\n${details.join('')}${mod}`);
 
         return {
-          name: item.formula,
-          value: `- 전체 결과: **[ ${item.total} ]**\n- 상세 결과: ${rollMap}\n${modMap}`,
+          name: formula,
+          value: `${total}상세 결과:\n${details.join('')}${mod}`,
         };
-      }))
+      })
+    }
 
-    interaction.reply({
-      embeds: [ embed, ],
-    });
+    dices();
+
+    if ('errorNumber' in result) {
+      console.log(111);
+      const embed = new EmbedBuilder()
+        .setColor('Red')
+        .setFields({
+          name: `에러번호 ${result.errorNumber}`,
+          value: result.errorMessage,
+        })
+
+      interaction.reply({
+        embeds: [ embed, ],
+      });
+    } else {
+      console.log(222);
+      const embed = new EmbedBuilder()
+        .setColor('Red')
+        .setFields(dices())
+
+      interaction.reply({
+        embeds: [ embed, ],
+      });
+    }
   },
   options: {},
 };

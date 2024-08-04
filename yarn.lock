@@ -287,10 +287,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@nihilapp/dice@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@nihilapp/dice/-/dice-0.0.16.tgz#f3ceecffbf9d90b81d7e034a3d2f27d0e9875f36"
-  integrity sha512-4hEI4+eSKh0G1QtiTRSeXucLqLGwSnzmT6WI6L5qegZf9A1CY2mzeyTTR9Wdpp3QMWOYxq5hDKZ6gEYHA/I9Jw==
+"@nihilapp/dice@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@nihilapp/dice/-/dice-0.1.10.tgz#fc0de2d943c0c97791f0e5dfff21f8df153ff0b7"
+  integrity sha512-od/M83izY/cNwNRsC10cykdkF4u0Ju4snEpQZ81TzD1VQXTKpffbKzzjt/anabEc58ayhRW8ta5iLSviCWvgBA==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
