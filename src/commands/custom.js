@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, } = require('discord.js');
-const { Dice, RollError, RollResult, } = require('@nihilapp/dice');
+const { Dice, } = require('@nihilapp/dice');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,19 +21,18 @@ module.exports = {
       formula: /** @type {string} */ dice,
     });
 
-    console.log(JSON.stringify(result));
+    const dices = () => {
+      if ('errorNumber' in result) {
+        return;
+      }
 
-    function dices() {
-      /** @type {RollResult[]} */
       const copyResult = [ ...result, ];
       return copyResult.map((diceResult) => {
         const { formula, } = diceResult;
-        console.log(formula);
 
         const total = `전체 결과: **[ ${diceResult.total} ]**\n\n`;
-        console.log(total);
 
-        const details = diceResult.dices.map((res, index) => {
+        const details = diceResult.dices.map((res) => {
           const { formula, } = res;
           const detailString = res.result.map(
             (resItem) => resItem.dice
@@ -48,7 +47,6 @@ module.exports = {
 
           return `- ${formula} **[ ${res.total} ]**(${detailString})${ignore}\n`;
         });
-        console.log(details);
 
         const modString = diceResult.mod.length !== 0
           ? diceResult.mod.join(', ')
@@ -56,9 +54,6 @@ module.exports = {
         const mod = modString
           ? `- 보정치 (${modString})`
           : '';
-        console.log(mod);
-
-        console.log(`${total}상세 결과:\n${details.join('')}${mod}`);
 
         return {
           name: formula,
@@ -70,7 +65,6 @@ module.exports = {
     dices();
 
     if ('errorNumber' in result) {
-      console.log(111);
       const embed = new EmbedBuilder()
         .setColor('Red')
         .setFields({
@@ -82,7 +76,6 @@ module.exports = {
         embeds: [ embed, ],
       });
     } else {
-      console.log(222);
       const embed = new EmbedBuilder()
         .setColor('Red')
         .setFields(dices())
